@@ -55,8 +55,12 @@ server <- function(input, output) {
     })
     
     output$histPlot <- renderPlot({
-        hist(diamonds[[input$histvar]], input$nbins, xlab=input$histvar, col='green',
-             main=NULL)
+        if((input$histvar=='color') || (input$histvar=='clarity') || (input$histvar=='cut'))
+            barplot(height=table(diamonds[[input$histvar]]),xlab=input$histvar,
+                    ylab='Frequency', col='green')
+        else
+            hist(diamonds[[input$histvar]], input$nbins, xlab=input$histvar, col='green',
+                 main=NULL)
     })
     output$scatterPlot <- renderPlot({
         qplot(get(input$xcol), get(input$ycol) ,data=diamonds, xlab=input$xcol, 
