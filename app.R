@@ -6,12 +6,14 @@
 #
 #    http://shiny.rstudio.com/
 #
-diamonds=read.csv("~/Documents/WPI data science MS/DS501/Case Study 3/diamonds.csv", header=TRUE)
+
+# Execute only once
+diamonds=read.csv("diamonds.csv", header=TRUE)
 
 library(shiny)
+library(ggplot2)
 
-# Define UI for application that draws a histogram
-## TODO: Go for a NavBar layout....
+## TODO:
 
 ui <- navbarPage("Diamonds",
     tabPanel("About",
