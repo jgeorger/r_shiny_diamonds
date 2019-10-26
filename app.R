@@ -7,13 +7,17 @@
 #    http://shiny.rstudio.com/
 #
 
-# Execute only once
-diamonds=read.csv("diamonds.csv", header=TRUE)
-
 library(shiny)
 library(ggplot2)
+library(caret)
 
-## TODO:
+# Execute only once
+diamonds=read.csv("diamonds.csv", header=TRUE)
+set.seed(2019)
+splitVeh = caret::createDataPartition(diamonds[,1], p = 0.8, list=F, times=1)
+trainVeh = diamonds[splitVeh,]
+testVeh = diamonds[!row.names(diamonds) %in% row.names(trainVeh),]
+testVeh = diamonds[-splitVeh,]
 
 ui <- navbarPage("Diamonds",
     tabPanel("About",
@@ -45,6 +49,19 @@ ui <- navbarPage("Diamonds",
                plotOutput("scatterPlot")
             )
         )
+    ),
+    tabPanel("Linear Regression",
+        sidebarLayout(
+            sidebarPanel(
+                checkboxGroupInput("lmDepVars", "Dependent Variables", 
+                                   names(diamonds[2:7]),
+                                   selected = names(diamonds[2]))
+            ),
+            mainPanel(
+                plotOutput("lrPlot")
+            )
+        ),
+        verbatimTextOutput("foo")
     )
 )
 
@@ -65,6 +82,19 @@ server <- function(input, output) {
     output$scatterPlot <- renderPlot({
         qplot(get(input$xcol), get(input$ycol) ,data=diamonds, xlab=input$xcol, 
               ylab=input$ycol) + geom_point(colour = "#3366FF", size = 1)
+    })
+    output$lrPlot <- renderPlot({
+        lr = lm(reformulate(input$lmDepVars, 'price'), data=trainVeh)
+        predPrice = data.frame(predict(lr, newdata = testVeh))
+        names(predPrice)[1] = 'Predicted'
+        predPrice$Reference = testVeh[,c('price')]
+        qplot(Reference, Predicted, data=predPrice) + geom_point(colour = "#006600", size = 3)
+        #predVeh = data.frame(predict(lr, testVeh, level=.95, interval="confidence"))
+        #predVeh$Reference = testVeh[,c('price')]
+        #qplot(Reference, fit, data=predVeh) + geom_point(colour = "#3366FF", size = 3) + geom_errorbar(aes(ymin = lwr,ymax = upr))        
+    })
+    output$foo <- renderPrint({
+        reformulate(input$lmDepVars, 'price')
     })
 }
 
