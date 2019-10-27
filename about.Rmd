@@ -4,6 +4,9 @@ author: "Joe Georger"
 date: "10/26/2019"
 output: html_document
 ---
+### The Data
+I spent a LOT of time in the "pre-discovery" phase looking for a suitable data set at UCI and Kaggle, one that combined a manageable number of features and observations as well as feature labels in a field that I had enough domain knowledge in to feel comfortable formulating a problem and drawing conclusions. I eventually chose a dataset based upon diamond pricing that seemed to have a good balance of number of features and observations, and I know a bit about the domain having been forced by "tradition" to purchase a diamond engagement ring.
+
 The diamond pricing dataset was downloaded from <https://www.kaggle.com/shivam2503/diamonds/download>. It contains 53940 observations of 11 variables, including the "4 C's" that most diamond shoppers are familiar with: Carat, Cut, Color, and Clarity. The other observation of note is the price, which this app will predict using linear regression (under the tab of the same name.) Here is the entire list of features, taken from the aforementioned website:
 
 'price': price in US dollars (\$326--\$18,823)
@@ -27,6 +30,10 @@ The diamond pricing dataset was downloaded from <https://www.kaggle.com/shivam25
 'table' width of top of diamond relative to widest point (43--95)
 
 It will be very interesting to see if indeed, the basic 4C\'s are enough to predict a diamond\'s price, or if other features such as depth or table are also important.
+
+The data was quite clean, with no missing values. I did not see a need to do any data preparation for this analysis. I created a histogram tab that allows one to see the distribution of all the features in the dataset.
+
+For model planning I used a scatterplot, included here, that showed a promising linear relationship between caret and price. This led me to start thinking about linear regression as the algorithm to base my model upon.
 
 ### The Algorithm
 I chose Linear Regression as the most suitable algorithm to be applied to this data. Each diamond is measured or categorized and a price is given. It seemed obvious to want to investigate to what degree the various measurements or categories affected price. Linear regression is used to estimate a continous variable as a linear function of other variables, and these input variables could also be discrete. As price is continous, our output fits. Several of our input variables are discrete, namely cut, color, and clarity. For these categorical variables, they are expanded (behind the scenes in R) to a set of indicator variables. For example, color has 7 levels, this would be expanded to 7 variables, having a 0 if not in that category, or a 1 if it is. It is also important to note that our discrete fields have a modest number of distinct values - too many would be a problem for linear regression. here we have between 5 and 7.
