@@ -27,9 +27,9 @@ ui <- navbarPage("Diamonds",
     tabPanel("Histogram",
         sidebarLayout(
             sidebarPanel(
-                selectInput('histvar', 'Feature', names(diamonds),
+                selectInput('histvar', 'Feature', names(diamonds[2:11]),
                             selected=names(diamonds)[[2]]),
-                sliderInput('nbins', 'Number of bins', 1, 50, 10)
+                sliderInput('nbins', 'Number of bins', 1, 50, 25)
             ),
             mainPanel(
                 plotOutput("histPlot")
@@ -39,9 +39,9 @@ ui <- navbarPage("Diamonds",
     tabPanel("Scatterplot",
         sidebarLayout(
             sidebarPanel(
-                selectInput('xcol', 'X Variable', names(diamonds),
+                selectInput('xcol', 'X Variable', names(diamonds[2:11]),
                             selected=names(diamonds)[[2]]),
-                selectInput('ycol', 'Y Variable', names(diamonds),
+                selectInput('ycol', 'Y Variable', names(diamonds[2:11]),
                             selected=names(diamonds)[[8]])
             ),
     
@@ -60,7 +60,7 @@ ui <- navbarPage("Diamonds",
                   coefficient of determination below. Please refer to the \"About\" tab for
                   descriptions of the variables.'),
                 checkboxGroupInput("lmDepVars", "Dependent Variables", 
-                                   names(diamonds[2:7]),
+                                   names(diamonds[-c(1,8)]),
                                    selected = names(diamonds[2]))
             ),
             mainPanel(
