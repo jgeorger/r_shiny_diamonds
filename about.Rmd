@@ -1,0 +1,43 @@
+---
+title: "Diamond Pricing Analysis"
+author: "Joe Georger"
+date: "10/26/2019"
+output: html_document
+---
+The diamond pricing dataset was downloaded from <https://www.kaggle.com/shivam2503/diamonds/download>. It contains 53940 observations of 11 variables, including the "4 C's" that most diamond shoppers are familiar with: Carat, Cut, Color, and Clarity. The other observation of note is the price, which this app will predict using linear regression (under the tab of the same name.) Here is the entire list of features, taken from the aforementioned website:
+
+'price': price in US dollars (\$326--\$18,823)
+
+'carat': weight of the diamond (0.2--5.01)
+
+'cut': quality of the cut (Fair, Good, Very Good, Premium, Ideal)
+
+'color': diamond colour, from J (worst) to D (best)
+
+'clarity' a measurement of how clear the diamond is (I1 (worst), SI2, SI1, VS2, VS1, VVS2, VVS1, IF (best))
+
+'x' length in mm (0--10.74)
+
+'y' width in mm (0--58.9)
+
+'z' depth in mm (0--31.8)
+
+'depth' total depth percentage = z / mean(x, y) = 2 * z / (x + y) (43--79)
+
+'table' width of top of diamond relative to widest point (43--95)
+
+It will be very interesting to see if indeed, the basic 4C\'s are enough to predict a diamond\'s price, or if other features such as depth or table are also important.
+
+### The Algorithm
+I chose Linear Regression as the most suitable algorithm to be applied to this data. Each diamond is measured or categorized and a price is given. It seemed obvious to want to investigate to what degree the various measurements or categories affected price. Linear regression is used to estimate a continous variable as a linear function of other variables, and these input variables could also be discrete. As price is continous, our output fits. Several of our input variables are discrete, namely cut, color, and clarity. For these categorical variables, they are expanded (behind the scenes in R) to a set of indicator variables. For example, color has 7 levels, this would be expanded to 7 variables, having a 0 if not in that category, or a 1 if it is. It is also important to note that our discrete fields have a modest number of distinct values - too many would be a problem for linear regression. here we have between 5 and 7.
+
+Linear regression involves solving for the coefficients $\beta$ in
+$$y_{i}=\beta_{0}+\beta_{1}x_{i}+\epsilon_{i}, i=1,...n$$
+such that the residuals (or error if you will) of the fitted value $y_{pred}$ and the observed value $y_{ref}$ is minimized.
+
+Confidence Interval - quantifies error between sample metric and true metric due to sampling randomness.
+
+### Conclusions
+Linear regression does a good job of predicting price. One will see that carat (size) is the most important predictor, followed by clarity, color, and cut. The lesser-known fields of depth and table make very small contributions, so we have verified the common wisdom that the 4C's are indeed good at predicting a diamond's price.
+
+While the linear regression does a good job of prediction overall, one cannot help but notice that the model is predicting negative prices for some of the inexpensive diamonds, up to about $2500. We see a little bit of prediction bias below the line of true prediction for both the price tails, while the middle price predictions tend to be biased above the line. This leads to the conlusion that it would be worth pursuing a non-linear model to see if that could better capture these effects.
