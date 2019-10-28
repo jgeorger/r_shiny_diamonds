@@ -21,8 +21,8 @@ testVeh = diamonds[-splitVeh,]
 
 ui <- navbarPage("Diamonds",
     tabPanel("About",
-             includeMarkdown('about.Rmd'),
-             verbatimTextOutput("summary")
+             includeMarkdown('about.Rmd')
+             #verbatimTextOutput("summary")
     ),
     tabPanel("Histogram",
         sidebarLayout(
@@ -54,12 +54,12 @@ ui <- navbarPage("Diamonds",
     tabPanel("Linear Regression",
         sidebarLayout(
             sidebarPanel(
-                p('Choose one or more dependent variables to use as the basis for predicting
+                p('Choose one or more features to use as the basis for predicting
                   a diamond\'s price. The scatterplot at the right will provide a visual
                   clue as to how well the model predicts the prices, as well as the
                   coefficient of determination below. Please refer to the \"About\" tab for
-                  descriptions of the variables.'),
-                checkboxGroupInput("lmDepVars", "Dependent Variables", 
+                  descriptions of the features.'),
+                checkboxGroupInput("lmIndVars", "Independent Variables", 
                                    names(diamonds[-c(1,8)]),
                                    selected = names(diamonds[2]))
             ),
@@ -90,7 +90,7 @@ server <- function(input, output) {
               ylab=input$ycol) + geom_point(colour = "#3366FF", size = 1)
     })
     linearModel <- reactive({
-        lm(reformulate(input$lmDepVars, 'price'), data=trainVeh)
+        lm(reformulate(input$lmIndVars, 'price'), data=trainVeh)
     })
     predPr <- reactive({
         data.frame(predict(linearModel(), newdata = testVeh))
