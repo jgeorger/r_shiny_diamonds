@@ -10,6 +10,7 @@
 library(shiny)
 library(ggplot2)
 library(caret)
+library(knitr)
 
 # Execute only once
 diamonds=read.csv("diamonds.csv", header=TRUE)
@@ -19,10 +20,14 @@ trainVeh = diamonds[splitVeh,]
 testVeh = diamonds[!row.names(diamonds) %in% row.names(trainVeh),]
 testVeh = diamonds[-splitVeh,]
 
+# This is needed to render the LaTex correctly in a web browser, along with the 
+# withMathJax below, operating on the .md file (not .rmd)
+rmdfile <- c("about.rmd")
+sapply(rmdfile, knit, quiet = T)
+
 ui <- navbarPage("Diamonds",
     tabPanel("About",
-             includeMarkdown('about.Rmd')
-             #verbatimTextOutput("summary")
+             withMathJax(includeMarkdown('about.md'))
     ),
     tabPanel("Histogram",
         sidebarLayout(
